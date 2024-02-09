@@ -80,26 +80,18 @@ public class BizCifrDecifrECB
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public String decifraTesto(String cipherText)
-	{
-		if(this.key != null && this.cifrario != null && cipherText != null)
-		{
-			byte[] cipherText64 = Base64.getDecoder().decode(cipherText);
-			try {
-				cifrario.init(Cipher.DECRYPT_MODE, key);
-			} catch (InvalidKeyException e) {
-				e.printStackTrace();
-			}
-			try {
-				byte[] plainText    = cifrario.doFinal(cipherText64);
-				String plainTextStr = Base64.getEncoder().encodeToString(plainText);
-				return plainTextStr;
-			} catch (IllegalBlockSizeException e) {
-				e.printStackTrace();
-			} catch (BadPaddingException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
+	public String decifraTesto(String cipherText) {
+	    if (this.key != null && this.cifrario != null && cipherText != null) {
+	        byte[] cipherText64 = Base64.getDecoder().decode(cipherText);
+	        try {
+	            cifrario.init(Cipher.DECRYPT_MODE, key);
+	            byte[] plainText = cifrario.doFinal(cipherText64);
+	            return new String(plainText);
+	        } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    return null;
 	}
+
 }
