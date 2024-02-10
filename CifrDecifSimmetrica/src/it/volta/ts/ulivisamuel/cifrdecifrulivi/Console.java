@@ -2,6 +2,7 @@ package it.volta.ts.ulivisamuel.cifrdecifrulivi;
 
 import java.util.Scanner;
 
+import it.volta.ts.ulivisamuel.cifrdecifrulivi.biz.BizCifrDecifrCBC;
 import it.volta.ts.ulivisamuel.cifrdecifrulivi.biz.BizCifrDecifrECB;
 import it.volta.ts.ulivisamuel.cifrdecifrulivi.events.CifrDecifrConsoleListener;
 import it.volta.ts.ulivisamuel.cifrdecifrulivi.util.Util;
@@ -10,12 +11,14 @@ public class Console
 {
 	private Scanner          scanner;
 	private BizCifrDecifrECB bizCifrDecifrECB;
+	private BizCifrDecifrCBC bizCifrDecifrCBC;
 	
 	//---------------------------------------------------------------------------------------------
 	
 	public Console()
 	{
 		bizCifrDecifrECB = new BizCifrDecifrECB();
+		bizCifrDecifrCBC = new BizCifrDecifrCBC();
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -24,6 +27,7 @@ public class Console
 	{
 		scanner = new Scanner(System.in);
 		bizCifrDecifrECB.setConsoleListener(new CifrDecifrConsoleListener());
+		bizCifrDecifrCBC.setConsoleListener(new CifrDecifrConsoleListener());
 		menu();
 		scanner.close();
 	}
@@ -77,6 +81,7 @@ public class Console
 	
 	private void cifraMessECB()
 	{
+		System.out.println("\nModalità Cifratura ECB");
 		String mess2 = "\nInserisci il messaggio da cifrare.\nOppure premi invio per "
 			     + "annullare l'operazione.";
 		String messNoDecr = Util.leggiString(scanner, mess2, false, null);
@@ -88,13 +93,12 @@ public class Console
 	
 	private void cifraMessCBC()
 	{
+		System.out.println("\nModalità Cifratura CBC");
 		String mess2 = "\nInserisci il messaggio da cifrare.\nOppure premi invio per "
 			     + "annullare l'operazione.";
 		String messNoDecr = Util.leggiString(scanner, mess2, false, null);
 		if(messNoDecr != null)
-		{
-			
-		}
+			bizCifrDecifrCBC.cifraTesto(messNoDecr);
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -121,6 +125,7 @@ public class Console
 	
 	private void decifraMessECB()
 	{
+		System.out.println("\nModalità Decifratura ECB");
 		String mess2 = "\nInserisci il messaggio da decifrare.\nOppure premi invio per "
 			     + "annullare l'operazione.";
 		String messNoDecr = Util.leggiString(scanner, mess2, false, null);
@@ -132,12 +137,11 @@ public class Console
 	
 	private void decifraMessCBC()
 	{
+		System.out.println("\nModalità Decifratura CBC");
 		String mess2 = "\nInserisci il messaggio da decifrare.\nOppure premi invio per "
 			     + "annullare l'operazione.";
 		String messNoDecr = Util.leggiString(scanner, mess2, false, null);
 		if(messNoDecr != null)
-		{
-			
-		}
+			bizCifrDecifrCBC.decifraTesto(messNoDecr);
 	}
 }
