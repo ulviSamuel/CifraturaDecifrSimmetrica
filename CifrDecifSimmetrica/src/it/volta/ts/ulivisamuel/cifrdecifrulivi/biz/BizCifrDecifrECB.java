@@ -11,22 +11,12 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
-public class BizCifrDecifrECB
+import it.volta.ts.ulivisamuel.cifrdecifrulivi.events.CifrDecifrEvent;
+
+public class BizCifrDecifrECB extends BizCifrDecifr 
 {
-	private SecretKey key;
-	private Cipher    cifrario;
-	
-	//---------------------------------------------------------------------------------------------
-	
-	public BizCifrDecifrECB()
-	{
-		key      = null;
-		cifrario = null;
-	}
-	
-	//---------------------------------------------------------------------------------------------
-	
-	private void generaChiave()
+	@Override
+	protected void generaChiave()
 	{
 		try {
 		    KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
@@ -39,7 +29,8 @@ public class BizCifrDecifrECB
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void inizializzaCifrario()
+	@Override
+	protected void inizializzaCifrario()
 	{
 		try {
 			this.cifrario = Cipher.getInstance("DES/ECB/PKCS5Padding"); //l'algoritmo da lei indicato non era compatibile
@@ -52,6 +43,7 @@ public class BizCifrDecifrECB
 	
 	//---------------------------------------------------------------------------------------------
 	
+	@Override
 	public String cifraTesto(String plainText)
 	{
 		if(plainText != null)
@@ -68,6 +60,7 @@ public class BizCifrDecifrECB
 			try {
 				byte[] cipherText       = cifrario.doFinal(plainText.getBytes());
 				String cipherTextString = Base64.getEncoder().encodeToString(cipherText);
+				consoleListener.mostra(new CifrDecifrEvent("\nTesto cifrato: " + cipherTextString));
 				return cipherTextString;
 			} catch (IllegalBlockSizeException e) {
 				e.printStackTrace();
@@ -75,23 +68,34 @@ public class BizCifrDecifrECB
 				e.printStackTrace();
 			}
 		}
+		consoleListener.mostraErrore(new CifrDecifrEvent("\nNon è stato possibile cifrare il messaggio!"));
 		return null;
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public String decifraTesto(String cipherText) {
-	    if (this.key != null && this.cifrario != null && cipherText != null) {
-	        byte[] cipherText64 = Base64.getDecoder().decode(cipherText);
-	        try {
-	            cifrario.init(Cipher.DECRYPT_MODE, key);
-	            byte[] plainText = cifrario.doFinal(cipherText64);
-	            return new String(plainText);
-	        } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-	            e.printStackTrace();
-	        }
+	@Override
+	public String decifraTesto(String cipherText)
+	{
+	    if (this.key != null && this.cifrario != null) 
+	    {
+	    	if(cipherText != null)
+	    	{
+	    		byte[] cipherText64 = Base64.getDecoder().decode(cipherText);
+		        try {
+		            cifrario.init(Cipher.DECRYPT_MODE, key);
+		            byte[] plainText = cifrario.doFinal(cipherText64);
+		            String res = new String(plainText);
+		            consoleListener.mostra(new CifrDecifrEvent("\nTesto decifrato: " + res));
+		            return res;
+		        } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+		            e.printStackTrace();
+		        }
+	    	}
+	    	consoleListener.mostraErrore(new CifrDecifrEvent("\nNon è stato possibile cifrare il messaggio!"));
+			return null;
 	    }
+	    consoleListener.mostraErrore(new CifrDecifrEvent("\nNon puoi decifrare un messaggio senza prima averne cifrato uno!"));
 	    return null;
 	}
-
 }

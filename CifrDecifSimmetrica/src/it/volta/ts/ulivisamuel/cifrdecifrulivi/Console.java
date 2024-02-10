@@ -3,6 +3,7 @@ package it.volta.ts.ulivisamuel.cifrdecifrulivi;
 import java.util.Scanner;
 
 import it.volta.ts.ulivisamuel.cifrdecifrulivi.biz.BizCifrDecifrECB;
+import it.volta.ts.ulivisamuel.cifrdecifrulivi.events.CifrDecifrConsoleListener;
 import it.volta.ts.ulivisamuel.cifrdecifrulivi.util.Util;
 
 public class Console 
@@ -22,6 +23,7 @@ public class Console
 	public void esegui()
 	{
 		scanner = new Scanner(System.in);
+		bizCifrDecifrECB.setConsoleListener(new CifrDecifrConsoleListener());
 		menu();
 		scanner.close();
 	}
@@ -79,20 +81,13 @@ public class Console
 			     + "annullare l'operazione.";
 		String messNoDecr = Util.leggiString(scanner, mess2, false, null);
 		if(messNoDecr != null)
-		{
-			String res = bizCifrDecifrECB.cifraTesto(messNoDecr);
-			if(res == null)
-				System.err.println("\nNon è stato possibile cifrare il messaggio!");
-			else
-				System.out.println("\nTesto cifrato: "+res);
-		}
+			bizCifrDecifrECB.cifraTesto(messNoDecr);
 	}
 
 	//---------------------------------------------------------------------------------------------
 	
 	private void cifraMessCBC()
 	{
-		System.out.println("cifraMessCBC");
 		String mess2 = "\nInserisci il messaggio da cifrare.\nOppure premi invio per "
 			     + "annullare l'operazione.";
 		String messNoDecr = Util.leggiString(scanner, mess2, false, null);
@@ -126,25 +121,17 @@ public class Console
 	
 	private void decifraMessECB()
 	{
-		System.out.println("decifraMessECB");
 		String mess2 = "\nInserisci il messaggio da decifrare.\nOppure premi invio per "
 			     + "annullare l'operazione.";
 		String messNoDecr = Util.leggiString(scanner, mess2, false, null);
 		if(messNoDecr != null)
-		{
-			String res = bizCifrDecifrECB.decifraTesto(messNoDecr);
-			if(res == null)
-				System.err.println("\nNon è stato possibile decifrare il messaggio!");
-			else
-				System.out.println("\nTesto decifrato: "+res);
-		}
+			bizCifrDecifrECB.decifraTesto(messNoDecr);
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
 	private void decifraMessCBC()
 	{
-		System.out.println("decifraMessCBC");
 		String mess2 = "\nInserisci il messaggio da decifrare.\nOppure premi invio per "
 			     + "annullare l'operazione.";
 		String messNoDecr = Util.leggiString(scanner, mess2, false, null);
